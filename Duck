@@ -1,0 +1,56 @@
+import random
+import time
+
+# Define the Duck class
+class Duck:
+    def __init__(self, name, energy=100):
+        self.name = name
+        self.energy = energy  # starts fully rested
+        self.distance_travelled = 0
+
+    def fly(self, distance):
+        """Duck flies a certain distance if it has enough energy."""
+        if self.energy >= distance * 2:
+            self.distance_travelled += distance
+            self.energy -= distance * 2  # energy consumed per km
+            print(f"{self.name} flew {distance} km. Energy left: {self.energy}.")
+        else:
+            print(f"{self.name} is too tired to fly {distance} km and needs to rest.")
+
+    def rest(self):
+        """Duck regains energy by resting."""
+        rest_energy_gain = random.randint(15, 25)
+        self.energy = min(100, self.energy + rest_energy_gain)
+        print(f"{self.name} rested and regained {rest_energy_gain} energy. Total energy: {self.energy}.")
+
+# Migration simulation function
+def migrate(ducks, total_distance, rest_interval=50):
+    print("Starting migration...\n")
+
+    while True:
+        all_arrived = True
+        for duck in ducks:
+            if duck.distance_travelled < total_distance:
+                all_arrived = False
+                if duck.energy < 20:
+                    duck.rest()
+                else:
+                    fly_distance = random.randint(10, 20)
+                    duck.fly(fly_distance)
+
+                if duck.distance_travelled >= total_distance:
+                    print(f"{duck.name} has arrived at the destination!")
+        if all_arrived:
+            print("\nAll ducks have completed their migration!")
+            break
+
+        time.sleep(1)  # Pause for realism (can be removed for faster simulation)
+
+# Create a list of ducks for the migration
+ducks = [Duck("Daffy"), Duck("Mallory"), Duck("Quackers")]
+
+# Set migration parameters
+total_migration_distance = 500  # Total distance in km
+
+# Run the migration simulation
+migrate(ducks, total_migration_distance)
